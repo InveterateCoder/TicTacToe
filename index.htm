@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <link rel="icon" href="logo.png" type="image/png">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8">
+        <meta property="og:title" content="Tic Tac Toe / Крестики Нолики">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://static.thenounproject.com/png/76612-200.png">
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+            :root {
+                background-image: url(tile.png);
+            }
+            header > h3 {
+                text-align: center;
+                color:#d1d1d1;
+                text-shadow: 0 0px 16px black, -1px 0 black, 0 -1px black, 1px 0 black, 0 1px black;
+            }
+            main > div {
+                position: absolute;
+                display: grid;
+                grid-template-columns: auto auto auto;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            table {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                box-shadow: 0 6px 20px black;
+            }
+            td {
+                background-color: rgba(193, 193, 193, 0.73);
+                cursor: pointer;
+                background-position: center;
+                background-size: contain;
+            }
+        </style>
+
+    </head>
+    <body>
+        <header>
+            <h3>Tic Tac Toe / Крестики Нолики</h3>
+        </header>
+        <main>
+            <div>
+                <table>
+                    <tr>
+                        <td id="a1" onclick="clicked(this)"></td>
+                        <td id="a2" onclick="clicked(this)"></td>
+                        <td id="a3" onclick="clicked(this)"></td>
+                    </tr>
+                    <tr>
+                        <td id="b1" onclick="clicked(this)"></td>
+                        <td id="b2" onclick="clicked(this)"></td>
+                        <td id="b3" onclick="clicked(this)"></td>
+                    </tr>
+                    <tr>
+                        <td id="c1" onclick="clicked(this)"></td>
+                        <td id="c2" onclick="clicked(this)"></td>
+                        <td id="c3" onclick="clicked(this)"></td>
+                    </tr>
+                </table>
+            </div>
+        </main>
+        <script>
+            var div = document.querySelector("main > div");
+            function divResize(){
+                let height = (window.innerHeight - 30) > 550 ? 550 : window.innerHeight - 30;
+                let width = window.innerWidth > 550 ? 550 : window.innerWidth;
+                let x = Math.min(width, height);
+                x *= 0.85;
+                div.style.width = x + "px";
+                div.style.height = x + "px";
+                div.style.bottom = (window.innerHeight - 30 - x) / 2 + "px";
+            }
+            divResize();
+            window.addEventListener("resize", divResize);
+
+            var board = {
+                a1: null, a2: null, a3: null,
+                b1: null, b2: null, b3: null,
+                c1: null, c2: null, c3: null,
+                a1Item: document.getElementById("a1"),
+                a2Item: document.getElementById("a2"),
+                a3Item: document.getElementById("a3"),
+                b1Item: document.getElementById("b1"),
+                b2Item: document.getElementById("b2"),
+                b3Item: document.getElementById("b3"),
+                c1Item: document.getElementById("c1"),
+                c2Item: document.getElementById("c2"),
+                c3Item: document.getElementById("c3"),
+                set A1(figure){
+                    this.a1 = figure;
+                    if(figure == 'x')
+                        this.a1Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.a1Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.a1Item.style.backgroundImage = null;
+                },
+                set A2(figure){
+                    this.a2 = figure;
+                    if(figure == 'x')
+                        this.a2Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.a2Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.a2Item.style.backgroundImage = null;
+                },
+                set A3(figure){
+                    this.a3 = figure;
+                    if(figure == 'x')
+                        this.a3Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.a3Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.a3Item.style.backgroundImage = null;
+                },
+                set B1(figure){
+                    this.b1 = figure;
+                    if(figure == 'x')
+                        this.b1Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.b1Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.b1Item.style.backgroundImage = null;
+                },
+                set B2(figure){
+                    this.b2 = figure;
+                    if(figure == 'x')
+                        this.b2Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.b2Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.b2Item.style.backgroundImage = null;
+                },
+                set B3(figure){
+                    this.b3 = figure;
+                    if(figure == 'x')
+                        this.b3Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.b3Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.b3Item.style.backgroundImage = null;
+                },
+                set C1(figure){
+                    this.c1 = figure;
+                    if(figure == 'x')
+                        this.c1Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.c1Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.c1Item.style.backgroundImage = null;
+                },
+                set C2(figure){
+                    this.c2 = figure;
+                    if(figure == 'x')
+                        this.c2Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.c2Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.c2Item.style.backgroundImage = null;
+                },
+                set C3(figure){
+                    this.c3 = figure;
+                    if(figure == 'x')
+                        this.c3Item.style.backgroundImage = "url(x.png)";
+                    else if(figure == 'o')
+                        this.c3Item.style.backgroundImage = "url(o.png)";
+                    else
+                        this.c3Item.style.backgroundImage = null;
+                },
+            };
+            
+            var moveCounter = 0;
+            var figure = { user: 'x', ai: 'o' };
+            var turnUser = true;
+            var userMove;
+            var logic = 0;
+
+            function clicked(item){
+                if(!turnUser || board[item.id] != null)
+                    return;
+                turnUser = false;
+                board[item.id.toUpperCase()] = figure.user;
+                userMove = item.id;
+                setTimeout(aimove, 150);
+            }
+
+            function aimove(){
+                switch(moveCounter++)
+                {
+                    case 0:
+                        if(userMove == "b2"){ board.A1 = figure.ai; logic = 1; }
+                        else if(userMove == "a1"){ board.B2 = figure.ai; logic = 2; }
+                        else if(userMove == "a3"){ board.B2 = figure.ai; logic = 3; }
+                        else if(userMove == "c1"){ board.B2 = figure.ai; logic = 4; }
+                        else if(userMove == "c3"){ board.B2 = figure.ai; logic = 5; }
+                        else if(userMove == "a2"){ board.B2 = figure.ai; logic = 6; }
+                        else if(userMove == "b1"){ board.B2 = figure.ai; logic = 7; }
+                        else if(userMove == "c2"){ board.B2 = figure.ai; logic = 8; }
+                        else if(userMove == "b3"){ board.B2 = figure.ai; logic = 9; }
+                        turnUser = true;
+                        break;
+                    case 1:
+                        switch(logic){
+                            case 1:
+                                switch(userMove){
+                                    case "a2":
+                                        board.C2 = figure.ai;
+                                        logic = 11;
+                                        break;
+                                    case "a3":
+                                        board.C1 = figure.ai;
+                                        logic = 12;
+                                        break;
+                                    case "b1":
+                                        board.B3 = figure.ai;
+                                        logic = 13;
+                                        break;
+                                    case "b3":
+                                        board.B1 = figure.ai;
+                                        logic = 14;
+                                        break;
+                                    case "c1":
+                                        board.A3 = figure.ai;
+                                        logic = 15;
+                                        break;
+                                    case "c2":
+                                        board.A2 = figure.ai;
+                                        logic = 16;
+                                        break;
+                                    case "c3":
+                                        board.A3 = figure.ai;
+                                        logic = 17;
+                                        break;
+                                }
+                                break;
+                            case 2:
+                                switch(userMove){
+                                    case "a2":
+                                        board.A3 = figure.ai;
+                                        logic = 21;
+                                        break;
+                                    case "a3":
+                                        board.A2 = figure.ai;
+                                        logic = 22;
+                                        break;
+                                    case "b1":
+                                        board.C1 = figure.ai;
+                                        logic = 23;
+                                        break;
+                                    case "b3":
+                                        board.A2 = figure.ai;
+                                        logic = 24;
+                                        break;
+                                    case "c1":
+                                        board.B1 = figure.ai;
+                                        logic = 25;
+                                        break;
+                                    case "c2":
+                                        board.C1 = figure.ai;
+                                        logic = 26;
+                                        break;
+                                    case "c3":
+                                        board.B1 = figure.ai;
+                                        logic = 27;
+                                        break;
+                                }
+                                break;
+                            case 3:
+                                switch(userMove){
+                                    case "a1":
+                                        board.A2 = figure.ai;
+                                        logic = 31;
+                                        break;
+                                    case "a2":
+                                        board.A1 = figure.ai;
+                                        logic = 32;
+                                        break;
+                                    case "b1":
+                                        board.A2 = figure.ai;
+                                        logic = 33;
+                                        break;
+                                    case "b3":
+                                        board.C3 = figure.ai;
+                                        logic = 34;
+                                        break;
+                                    case "c1":
+                                        board.C2 = figure.ai;
+                                        logic = 35;
+                                        break;
+                                    case "c2":
+                                        board.B3 = figure.ai;
+                                        logic = 36;
+                                        break;
+                                    case "c3":
+                                        board.B3 = figure.ai;
+                                        logic = 37;
+                                        break;
+                                }
+                                break;
+                            case 4:
+                                switch(userMove){
+                                    case "a1":
+                                        board.B1 = figure.ai;
+                                        logic = 41;
+                                        break;
+                                    case "a2":
+                                        board.B1 = figure.ai;
+                                        logic = 42;
+                                        break;
+                                    case "a3":
+                                        board.B3 = figure.ai;
+                                        logic = 43;
+                                        break;
+                                    case "b1":
+                                        board.A1 = figure.ai;
+                                        logic = 44;
+                                        break;
+                                    case "b3":
+                                        board.C2 = figure.ai;
+                                        logic = 45;
+                                        break;
+                                    case "c2":
+                                        board.C3 = figure.ai;
+                                        logic = 46;
+                                        break;
+                                    case "c3":
+                                        board.C2 = figure.ai;
+                                        logic = 47;
+                                        break;
+                                }
+                                break;
+                            case 5:
+                                switch(userMove){
+                                    case "a1":
+                                        board.A2 = figure.ai;
+                                        logic = 51;
+                                        break;
+                                    case "a2":
+                                        board.B3 = figure.ai;
+                                        logic = 52;
+                                        break;
+                                    case "a3":
+                                        board.B3 = figure.ai;
+                                        logic = 53;
+                                        break;
+                                    case "b1":
+                                        board.C2 = figure.ai;
+                                        logic = 54;
+                                        break;
+                                    case "b3":
+                                        board.A3 = figure.ai;
+                                        logic = 55;
+                                        break;
+                                    case "c1":
+                                        board.C2 = figure.ai;
+                                        logic = 56;
+                                        break;
+                                    case "c2":
+                                        board.C1 = figure.ai;
+                                        logic = 57;
+                                        break;
+                                }
+                                break;
+                            case 6:
+                                switch(userMove){
+                                    case "a1":
+                                        board.A3 = figure.ai;
+                                        logic = 61;
+                                        break;
+                                    case "a3":
+                                        board.A1 = figure.ai;
+                                        logic = 62;
+                                        break;
+                                    case "b1":
+                                        board.A1 = figure.ai;
+                                        logic = 63;
+                                        break;
+                                    case "b3":
+                                        board.A3 = figure.ai;
+                                        logic = 64;
+                                        break;
+                                    case "c1":
+                                        board.B1 = figure.ai;
+                                        logic = 65;
+                                        break;
+                                    case "c2":
+                                        board.B1 = figure.ai;
+                                        logic = 66;
+                                        break;
+                                    case "c3":
+                                        board.B3 = figure.ai;
+                                        logic = 67;
+                                        break;
+                                }
+                                break;
+                            case 7:
+                                switch(userMove){
+                                    case "a1":
+                                        board.C1 = figure.ai;
+                                        logic = 71;
+                                        break;
+                                    case "a2":
+                                        board.A1 = figure.ai;
+                                        logic = 72;
+                                        break;
+                                    case "a3":
+                                        board.A2 = figure.ai;
+                                        logic = 73;
+                                        break;
+                                    case "b3":
+                                        board.A2 = figure.ai;
+                                        logic = 74;
+                                        break;
+                                    case "c1":
+                                        board.A1 = figure.ai;
+                                        logic = 75;
+                                        break;
+                                    case "c2":
+                                        board.C1 = figure.ai;
+                                        logic = 76;
+                                        break;
+                                    case "c3":
+                                        board.C2 = figure.ai;
+                                        logic = 77;
+                                        break;
+                                }
+                                break;
+                            case 8:
+                                switch(userMove){
+                                    case "a1":
+                                        board.B1 = figure.ai;
+                                        logic = 81;
+                                        break;
+                                    case "a2":
+                                        board.C3 = figure.ai;
+                                        logic = 82;
+                                        break;
+                                    case "a3":
+                                        board.B3 = figure.ai;
+                                        logic = 83;
+                                        break;
+                                    case "b1":
+                                        board.C1 = figure.ai;
+                                        logic = 84;
+                                        break;
+                                    case "b3":
+                                        board.C3 = figure.ai;
+                                        logic = 85;
+                                        break;
+                                    case "c1":
+                                        board.C3 = figure.ai;
+                                        logic = 86;
+                                        break;
+                                    case "c3":
+                                        board.C1 = figure.ai;
+                                        logic = 87;
+                                        break;
+                                }
+                                break;
+                            case 9:
+                                switch(userMove){
+                                    case "a1":
+                                        board.A2 = figure.ai;
+                                        logic = 91;
+                                        break;
+                                    case "a2":
+                                        board.A3 = figure.ai;
+                                        logic = 92;
+                                        break;
+                                    case "a3":
+                                        board.C3 = figure.ai;
+                                        logic = 93;
+                                        break;
+                                    case "b1":
+                                        board.A2 = figure.ai;
+                                        logic = 94;
+                                        break;
+                                    case "c1":
+                                        board.A2 = figure.ai;
+                                        logic = 95;
+                                        break;
+                                    case "c2":
+                                        board.C3 = figure.ai;
+                                        logic = 96;
+                                        break;
+                                    case "c3":
+                                        board.A3 = figure.ai;
+                                        logic = 97;
+                                        break;
+                                }
+                                break;
+                        }
+                        turnUser = true;
+                        break;
+                    case 2:
+                        switch(logic){
+                            case 11:
+                                switch(userMove){
+                                    case "b1":
+                                        board.B3 = figure.ai;
+                                        logic = 111;
+                                        break;
+                                    case "c1":
+                                        board.A3 = figure.ai;
+                                        logic = 112;
+                                        break;
+                                    case "a3":
+                                        board.C1 = figure.ai;
+                                        logic = 113;
+                                        break;
+                                    case "b3":
+                                        board.B1 = figure.ai;
+                                        logic = 114;
+                                        break;
+                                    case "c3":
+                                        board.C1 = figure.ai;
+                                        logic = 115;
+                                        break;
+                                }
+                                break;
+                            case 12:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 120;
+                                }
+                                break;
+                            case 13:
+                                switch(userMove){
+                                    case "a2":
+                                        board.C2 = figure.ai;
+                                        logic = 131;
+                                        break;
+                                    case "a3":
+                                        board.C1 = figure.ai;
+                                        logic = 132;
+                                        break;
+                                    case "c1":
+                                        board.A3 = figure.ai;
+                                        logic = 133;
+                                        break;
+                                    case "c2":
+                                        board.A2 = figure.ai;
+                                        logic = 134;
+                                        break;
+                                    case "c3":
+                                        board.A2 = figure.ai;
+                                        logic = 135;
+                                        break;
+                                }
+                                break;
+                            case 14:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 140;
+                                }
+                                break;
+                            case 15:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 150;
+                                }
+                                break;
+                            case 16:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 160;
+                                }
+                                break;
+                            case 17:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 170;
+                                }
+                                break;
+                            case 21:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.B1 = figure.ai;
+                                    logic = 210;
+                                }
+                                break;
+                            case 22:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.B1 = figure.ai;
+                                    logic = 220;
+                                }
+                                break;
+                            case 23:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 230;
+                                }
+                                break;
+                            case 24:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 240;
+                                }
+                                break;
+                            case 25:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 250;
+                                }
+                                break;
+                            case 26:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 260;
+                                }
+                                break;
+                            case 27:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 270;
+                                }
+                                break;
+                            case 31:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 310;
+                                }
+                                break;
+                            case 32:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 320;
+                                }
+                                break;
+                            case 33:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 330;
+                                }
+                                break;
+                            case 34:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 340;
+                                }
+                                break;
+                            case 35:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 350;
+                                }
+                                break;
+                            case 36:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 360;
+                                }
+                                break;
+                            case 37:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 370;
+                                }
+                                break;
+                            case 41:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 410;
+                                }
+                                break;
+                            case 42:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 420;
+                                }
+                                break;
+                            case 43:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 430;
+                                }
+                                break;
+                            case 44:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 440;
+                                }
+                                break;
+                            case 45:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 450;
+                                }
+                                break;
+                            case 46:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.B1 = figure.ai;
+                                    logic = 460;
+                                }
+                                break;
+                            case 47:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 470;
+                                }
+                                break;
+                            case 51:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 510;
+                                }
+                                break;
+                            case 52:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 520;
+                                }
+                                break;
+                            case 53:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 530;
+                                }
+                                break;
+                            case 54:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 540;
+                                }
+                                break;
+                            case 55:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 550;
+                                }
+                                break;
+                            case 56:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 560;
+                                }
+                                break;
+                            case 57:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 570;
+                                }
+                                break;
+                            case 61:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.B1 = figure.ai;
+                                    logic = 610;
+                                }
+                                break;
+                            case 62:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 620;
+                                }
+                                break;
+                            case 63:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 630;
+                                }
+                                break;
+                            case 64:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 640;
+                                }
+                                break;
+                            case 65:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 650;
+                                }
+                                break;
+                            case 66:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 660;
+                                }
+                                break;
+                            case 67:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 670;
+                                }
+                                break;
+                            case 71:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 710;
+                                }
+                                break;
+                            case 72:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 720;
+                                }
+                                break;
+                            case 73:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 730;
+                                }
+                                break;
+                            case 74:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 740;
+                                }
+                                break;
+                            case 75:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 750;
+                                }
+                                break;
+                            case 76:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 760;
+                                }
+                                break;
+                            case 77:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 770;
+                                }
+                                break;
+                            case 81:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 810;
+                                }
+                                break;
+                            case 82:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 820;
+                                }
+                                break;
+                            case 83:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 830;
+                                }
+                                break;
+                            case 84:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 840;
+                                }
+                                break;
+                            case 85:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 850;
+                                }
+                                break;
+                            case 86:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.B1 = figure.ai;
+                                    logic = 860;
+                                }
+                                break;
+                            case 87:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    logic = 870;
+                                }
+                                break;
+                            case 91:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 910;
+                                }
+                                break;
+                            case 92:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.A1 = figure.ai;
+                                    logic = 920;
+                                }
+                                break;
+                            case 93:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A2 = figure.ai;
+                                    logic = 930;
+                                }
+                                break;
+                            case 94:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C1 = figure.ai;
+                                    logic = 940;
+                                }
+                                break;
+                            case 95:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    logic = 950;
+                                }
+                                break;
+                            case 96:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else{
+                                    board.A3 = figure.ai;
+                                    logic = 960;
+                                }
+                                break;
+                            case 97:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.C2 = figure.ai;
+                                    logic = 970;
+                                }
+                                break;
+                        }
+                        turnUser = true;
+                        break;
+                    case 3:
+                        switch(logic){
+                            case 111:
+                                if(userMove == "a3")
+                                    board.C1 = figure.ai;
+                                else
+                                    board.A3 = figure.ai;
+                                break;
+                            case 112:
+                                if(userMove != "b3")
+                                    board.B3 = figure.ai;
+                                else
+                                    board.B1 = figure.ai;
+                                break;
+                            case 113:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else{
+                                    board.C3 = figure.ai;
+                                    finishGame("a3", "b3", "c3");
+                                    return;
+                                }
+                                break;
+                            case 114:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 115:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 120:
+                                if(userMove != "a2")
+                                    board.A2 = figure.ai;
+                                else board.C2 = figure.ai;
+                                break;
+                            case 131:
+                                if(userMove != "a3")
+                                    board.A3 = figure.ai;
+                                else board.C1 = figure.ai;
+                                break;
+                            case 132:
+                                if(userMove != "a2")
+                                    board.A2 = figure.ai;
+                                else board.C2 = figure.ai;
+                                break;
+                            case 133:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 134:
+                            case 135:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 140:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a1", "a2", "a3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 150:
+                                if(userMove != "b3")
+                                    board.B3 = figure.ai;
+                                else board.B1 = figure.ai;
+                                break;
+                            case 160:
+                                if(userMove != "b1"){
+                                    board.B2 = figure.ai;
+                                    finishGame("a1", "b1", "c1");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 170:
+                                if(userMove != "b1")
+                                    board.B1 = figure.ai;
+                                else board.B3 = figure.ai;
+                                break;
+                            case 210:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 220:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 230:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 240:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 250:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 260:
+                                if(userMove != "b3")
+                                    board.B3 = figure.ai;
+                                else board.C3 = figure.ai;
+                                break;
+                            case 270:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 310:
+                            case 320:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 330:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 340:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 350:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 360:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 370:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 410:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 420:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 430:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 440:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 450:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 460:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 470:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 510:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 520:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 530:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 540:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 550:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 560:
+                            case 570:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 610:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 620:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 630:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 640:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 650:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 660:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 670:
+                                if(userMove != "c1")
+                                    board.C1 = figure.ai;
+                                else
+                                    board.C2 = figure.ai;
+                                break;
+                            case 710:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 720:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 730:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 740:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 750:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 760:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.B3 = figure.ai;
+                                break;
+                            case 770:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 810:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 820:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else{
+                                    board.B3 = figure.ai;
+                                    finishGame("a3", "b3", "c3");
+                                    return;
+                                }
+                                break;
+                            case 830:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 840:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.A2 = figure.ai;
+                                break;
+                            case 850:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.A2 = figure.ai;
+                                break;
+                            case 860:
+                                if(userMove != "b3"){
+                                    board.B3 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.A3 = figure.ai;
+                                break;
+                            case 870:
+                                if(userMove != "b1"){
+                                    board.B1 = figure.ai;
+                                    finishGame("b1", "b2", "b3");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                            case 910:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 920:
+                                if(userMove != "c3"){
+                                    board.C3 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.C2 = figure.ai;
+                                break;
+                            case 930:
+                                if(userMove != "c2"){
+                                    board.C2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.C1 = figure.ai;
+                                break;
+                            case 940:
+                                if(userMove != "a3"){
+                                    board.A3 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.C3 = figure.ai;
+                                break;
+                            case 950:
+                                if(userMove != "a1"){
+                                    board.A1 = figure.ai;
+                                    finishGame("a1", "b2", "c3");
+                                    return;
+                                }
+                                else board.B1 = figure.ai;
+                                break;
+                            case 960:
+                                if(userMove != "c1"){
+                                    board.C1 = figure.ai;
+                                    finishGame("c1", "b2", "a3");
+                                    return;
+                                }
+                                else board.B1 = figure.ai;
+                                break;
+                            case 970:
+                                if(userMove != "a2"){
+                                    board.A2 = figure.ai;
+                                    finishGame("a2", "b2", "c2");
+                                    return;
+                                }
+                                else board.A1 = figure.ai;
+                                break;
+                        }
+                        turnUser = true;
+                        break;
+                    default:
+                        finishGame();
+                }
+            }
+
+            function finishGame(a = null, b = null, c = null){
+                if(a == null || b == null || c == null)
+                    reset();
+                else{
+                    let counter = 0;
+                    for(let i in board){
+                        if(i != a && i != b && i != c){
+                            board[i.toUpperCase()] = null;
+                        }
+                        if(++counter == 9)
+                            break;
+                    }
+                    reset();
+                }
+            }
+
+            function reset(){
+                setTimeout(() => {
+                        board.A1 = board.A2 = board.A3 = 
+                            board.B1 = board.B2 = board.B3 =
+                            board.C1 = board.C2 = board.C3 = null;
+                            moveCounter = 0;
+                            let temp = figure.user;
+                            figure.user = figure.ai;
+                            figure.ai = temp;
+                            turnUser = true;
+                    }, 1000);
+            }
+        </script>
+    </body>
+</html>
