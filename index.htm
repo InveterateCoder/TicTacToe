@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <title>Tic Tac Toe</title>
@@ -1282,12 +1282,16 @@
                                 else board.C2 = figure.ai;
                                 break;
                             case 133:
-                                if(userMove != "a2"){
+                                if (userMove != "a2") {
                                     board.A2 = figure.ai;
                                     finishGame("a1", "a2", "a3");
                                     return;
                                 }
-                                else board.C2 = figure.ai;
+                                else {
+                                    board.C3 = figure.ai;
+                                    finishGame("a3", "b3", "c3");
+                                    return;
+                                }
                                 break;
                             case 134:
                             case 135:
